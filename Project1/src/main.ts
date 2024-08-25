@@ -64,6 +64,7 @@ const generateTodoItem = (title: string, isCompleted: boolean, id: string) => {
 const deleteTodo=(id:string)=>{
     const idx=todos.findIndex((item)=>item.id===id);
     todos.splice(idx,1);
+    renderTodo(todos);
 }
 
 const renderTodo = (todos: Todo[]) => {
