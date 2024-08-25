@@ -46,13 +46,14 @@ const generateTodoItem = (title: string, isCompleted: boolean, id: string) => {
   //creating P for title
   const paragraph: HTMLParagraphElement = document.createElement("p");
   paragraph.innerText = title;
+  paragraph.className=isCompleted?"textCut":"";
 
   //creating Delete Button
   const btn: HTMLButtonElement = document.createElement("button");
   btn.innerText = "X";
   btn.className = "deleteBtn";
   btn.onclick=()=>{
-    deleteTodo(id);
+    deleteTodo(id); 
   }
 
   //appending
