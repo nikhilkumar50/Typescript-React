@@ -1,18 +1,21 @@
-type PropsType = {
-  heading: string;
-  count: number;
-  func1:()=>void
-};
+type inputValueType = string | number;
 
-const Box = ({ heading, count,func1 }: PropsType) => {
+const Box = <T extends inputValueType>({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  onChange: () => void;
+}) => {
   return (
     <>
-      <div>
-        Getting started with react and typescript along with 6 Pack Programmer
-      </div>
-      <div>{heading}</div>
-      <div>{count}</div>
-      <button onClick={()=>func1()} style={{"background":"red"}}>Click me to see magic</button>
+      <form>
+        <label>{label}</label>
+        <input type="text" value={value} onChange={onChange} />
+        <button type="submit">Submit</button>
+      </form>
     </>
   );
 };
