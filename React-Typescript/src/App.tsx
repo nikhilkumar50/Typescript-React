@@ -1,37 +1,58 @@
-import { createContext, ReactNode, useState } from "react";
-import Box from "./components/Box";
+import { useReducer } from "react";
 
-type ThemeType = "light" | "dark";
+type StateType = {
+  count: number;
+};
 
-interface ThemeContextType {
-  theme: ThemeType;
-  toggleTheme: () => void;
-}
+type ActionType =
+  | { type: "Increment"; payload: number }
+  | { type: "Decrement"; payload: number };
 
-export const ThemeContext = createContext<ThemeContextType>({
-  theme: "light",
-  toggleTheme: () => {},
-});
+const initialState: StateType = {
+  count: 0,
+};
 
-const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<ThemeType>("light");
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  };
-
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+const reducer = (state: StateType, action: ActionType): StateType => {
+  switch (action.type) {
+    case "Increment":
+      return { count: state.count + action.payload };
+    case "Decrement":
+      return { count: state.count - action.payload };
+    default:
+      return state;
+  }
 };
 
 const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const increment = (): void => {
+    dispatch({
+      type: "Increment",
+      payload: 2,
+    });
+  };
+
+  const decrement = (): void => {
+    dispatch({
+      type: "Decrement",
+      payload: 2,
+    });
+  };
+
   return (
-    <ThemeProvider>
-      <Box />
-    </ThemeProvider>
+    <>
+      <h1>Count Change</h1>
+      <div className="reducerContainer">
+        <button onClick={() => decrement()} className="buttonClick">
+          -
+        </button>
+        <p>Count:{state.count}</p>
+        <button onClick={() => increment()} className="buttonClick">
+          +
+        </button>
+      </div>
+    </>
   );
 };
 
