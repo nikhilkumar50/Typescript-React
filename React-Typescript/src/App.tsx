@@ -1,51 +1,37 @@
-import { FormEvent, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
+import Box from "./components/Box";
 
-interface Person {
-  name: string;
-  age: number;
+type ThemeType = "light" | "dark";
+
+interface ThemeContextType {
+  theme: ThemeType;
+  toggleTheme: () => void;
 }
 
-const App = () => {
-  const [user, setUser] = useState<Person>();
+export const ThemeContext = createContext<ThemeContextType>({
+  theme: "light",
+  toggleTheme: () => {},
+});
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [theme, setTheme] = useState<ThemeType>("light");
 
-    console.log(user);
-    if (user) {
-      setUser({ ...user, name: "", age: 0 });
-    }
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
   return (
-    <div>
-      <form onSubmit={submitHandler}>
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          placeholder="Enter Your Name"
-          name="name"
-          value={user?.name || ""}
-          onChange={(e) =>
-            setUser((prev) => ({ ...prev!, name: e.target.value }))
-          }
-          autoComplete="off"
-        />
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
 
-        <label htmlFor="age">Age</label>
-        <input
-          type="number"
-          placeholder="Enter Your Age"
-          name="age"
-          value={user?.age || ""}
-          onChange={(e) =>
-            setUser((prev) => ({ ...prev!, age: Number(e.target.value) }))
-          }
-        />
-
-        <button type="submit">Register</button>
-      </form>
-    </div>
+const App = () => {
+  return (
+    <ThemeProvider>
+      <Box />
+    </ThemeProvider>
   );
 };
 
